@@ -36,18 +36,7 @@ y_data = [[[ 0.7, 1.9]],
           [[ 0.1, 2.5]],
           [[ 1.3, 2.5]],
           [[ 0.6, 3.0]]]
-'''
-W = [[[x,x]
-      [x,x]
-      [x,x]]
-     [[x,x,x]
-      [x,x,x]
-      [x,x,x]]]
 
-Y = [[[y],[y]],
-     [[y],[y]]
-]
-'''
 tf.shape(x_data).eval()
 tf.shape(y_data).eval()
 
@@ -55,6 +44,20 @@ X = tf.placeholder(tf.float32, shape=([10, 2, 3]))
 Y = tf.placeholder(tf.float32, shape=([10, 1, 2]))
 W = tf.Variable(tf.random_normal([10, 3, 1]))
 b = tf.Variable(tf.random_normal([10, 2, 1]))
+
+'''
+
+X와 W의 matmul 을 가능한 값을 찾아야 함
+
+4*6 : np.dot(A[i,j,k,:], B[n,o,p,i,:,m]) => A,B[i,j,k,n,o,p,i,m]﻿
+4*6 : np.matmul(A[i,j,k,:], B[n,o,p,i,j,:,m]) => A,B[n,o,p,i,j,k,m]﻿
+
+X = tf.placeholder(tf.float32, shape=([10, 2, 3]))
+Y = tf.placeholder(tf.float32, shape=([10, 1, 2]))
+W = tf.Variable(tf.random_normal([3, 1]))
+b = tf.Variable(tf.random_normal([1]))
+
+'''
 
 hypothesis = tf.sigmoid(tf.matmul(X, W) + b)
 cost = tf.reduce_mean(Y*tf.log(hypothesis) + (1-Y)*tf.log(1-hypothesis))
@@ -73,3 +76,24 @@ plt.figure(figsize=[12,6])
 plt.plot(cost_history)
 plt.grid()
 #plt.show()﻿
+
+
+##################
+X = np.arange(10*2*3).reshape((10,2,3))
+Y = np.arange(10*1*2).reshape((10,1,2))
+W = np.arange(3*2).reshape((3,2))
+b = np.arange(1).reshape((1))
+b = np.arange(10*2*1).reshape((10,2,1))
+print(X,X.shape)
+print(Y,Y.shape)
+print(W,W.shape)
+print(b,b.shape)
+
+H = np.matmul(X,W)
+print(H,H.shape)
+H1 = np.matmul(X,W) + b
+print(H1,H1.shape)
+H2 = Y*H1
+print(H2,H2.shape)
+H3 = np.dot(Y,H1)
+print(H3,H3.shape)
