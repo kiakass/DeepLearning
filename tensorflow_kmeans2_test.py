@@ -17,7 +17,7 @@ import numpy as np
 sess = tf.Session()
 tf.global_variables_initializer()
 
-num_points = 2000
+num_points = 10
 vectors_set,vectors1_set,vectors2_set,vectors3_set =[], [], [], []
 
 for i in range(num_points):
@@ -44,11 +44,12 @@ centroids = tf.Variable(tf.slice(tf.random_shuffle(vectors),[0,0],[k,-1]))
 
 expanded_vectors = tf.expand_dims(vectors, 0)
 expanded_centroids = tf.expand_dims(centroids, 1)
-#print(expanded_vectors.get_shape(),expanded_centroids.get_shape())
+print(expanded_vectors.get_shape(),expanded_centroids.get_shape())
 
 assignments = tf.argmin(tf.reduce_sum(tf.square(tf.subtract(
         expanded_vectors, expanded_centroids)), 2), 0)
 assignments.get_shape()
+print(sess.run(assignments))
 
 means = tf.concat([tf.reduce_mean
                    ( tf.gather(vectors,
@@ -60,6 +61,9 @@ means = tf.concat([tf.reduce_mean
                   ], 0 #concat 
                  )
 
+print(sess.run(tf.equal(assignments, 5)))
+#print(sess.run(means))
+print(sess.run(tf.where(tf.equal(assignments, 0))))
 
 update_centroids = tf.assign(centroids, means)
 
