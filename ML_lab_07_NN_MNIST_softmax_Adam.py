@@ -49,10 +49,9 @@ hypothesis = tf.nn.softmax(tf.matmul(layer2, W3) + b3)
 
 #hypothesis = tf.sigmoid(tf.matmul(layer2, W3) + b3)
 # Hypothesis (using softmax)
-
-
-cost = tf.reduce_mean(-tf.reduce_sum(Y * tf.log(hypothesis), axis=1))
-train = tf.train.AdamOptimizer(learning_rate=0.01).minimize(cost)
+cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=hypothesis, labels=Y))
+#cost = tf.reduce_mean(-tf.reduce_sum(Y * tf.log(hypothesis), axis=1))
+train = tf.train.AdamOptimizer(learning_rate=0.001).minimize(cost)
 
 # Test model
 is_correct = tf.equal(tf.argmax(hypothesis, 1), tf.argmax(Y, 1))
